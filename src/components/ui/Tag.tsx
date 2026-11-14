@@ -10,8 +10,8 @@ export function Tag({ label, emphasized = false }: TagProps) {
   return (
     <span
       className={cn(
-        'rounded-full border px-[7px] py-[3px] font-mono text-[9px] tracking-[0.12em] uppercase',
-        emphasized ? 'border-pink bg-pink text-white' : 'border-pink-soft text-pink',
+        'border-2 px-[6px] py-[1px] text-[11px] font-bold uppercase',
+        emphasized ? 'border-ink bg-ink text-white' : 'border-ink text-ink',
       )}
     >
       {label}

@@ -26,11 +26,11 @@ interface DialogLayoutProps {
  */
 export function DialogLayout({ title, note, aside, onClose, children }: DialogLayoutProps) {
   return (
-    <div className="[filter:drop-shadow(0_26px_40px_rgb(226_67_127/0.34))]">
+    <div className="[filter:drop-shadow(7px_9px_0_#0a0608)]">
       <div className="cut-tl-br animate-modal-in scrollbar-none grid max-h-[calc(100dvh-2rem)] overflow-y-auto bg-pink md:grid-cols-[292px_1fr]">
         <aside className="relative flex flex-col gap-5 overflow-hidden px-7 pt-8 pb-16 text-cream md:pb-20">
-          <p className="text-[11px] font-medium tracking-caps">_{APP_NAME}</p>
-          <h2 className="font-wide text-[44px] leading-[0.84] tracking-[-0.025em]">
+          <p className="text-[15px] font-bold italic">_{APP_NAME}</p>
+          <h2 className="text-[50px] leading-[0.86] font-black tracking-[-0.035em]">
             <span className="block">{title.lead}</span>
             <span className="text-outline-cream mt-1 block">{title.accent}</span>
           </h2>
@@ -40,7 +40,7 @@ export function DialogLayout({ title, note, aside, onClose, children }: DialogLa
 
         <section className="cut-tl-br [--cut:22px] m-3 flex flex-col bg-card px-7 pt-5 pb-7 md:ml-0">
           <div className="mb-5 flex items-center justify-between gap-4">
-            <p className="text-[12px] font-light text-pink-soft italic tracking-[0.12em]">// {note}</p>
+            <p className="text-[15px] font-semibold text-muted italic">// {note}</p>
             <IconButton label="close" variant="outline" size="sm" onClick={onClose}>
               <CloseIcon className="size-2.5" />
             </IconButton>

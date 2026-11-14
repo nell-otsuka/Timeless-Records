@@ -13,12 +13,12 @@ export function ScreeningList({ groups, onBook, onPlan }: ScreeningListProps) {
   const total = groups.reduce((sum, group) => sum + group.count, 0);
 
   return (
-    <section className="mt-6" aria-labelledby="screenings-heading">
-      <div className="flex items-baseline justify-between border-b border-pink-line pb-2.5">
-        <h3 id="screenings-heading" className="text-xs font-bold tracking-[0.3em] text-pink-deep">
+    <section className="mt-8" aria-labelledby="screenings-heading">
+      <div className="flex items-baseline justify-between border-b-2 border-ink pb-2">
+        <h3 id="screenings-heading" className="text-[20px] font-extrabold text-ink italic">
           screenings
         </h3>
-        <span className="font-mono text-[11px] tracking-[0.14em] text-muted">
+        <span className="text-[15px] font-semibold text-muted italic">
           {screeningCountLabel(total)}
           {groups.length > 1 && ` · ${groups.length} cities`}
         </span>

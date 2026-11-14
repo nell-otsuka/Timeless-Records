@@ -17,7 +17,7 @@ export function TicketGallery({ tiles, selectedId, onSelect, columns }: TicketGa
     <ul className="grid gap-3" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>
       {tiles.map(({ id, title, coverUrl, past }) => (
         <li key={id}>
-          <PosterCard tone={id === selectedId ? 'deep' : 'accent'} className="pb-[6px] pl-[6px]">
+          <PosterCard tone={id === selectedId ? 'accent' : 'plain'}>
             <button type="button" aria-label={title} aria-pressed={id === selectedId} onClick={() => onSelect(id)} className="block w-full">
               <CoverImage
                 src={coverUrl}

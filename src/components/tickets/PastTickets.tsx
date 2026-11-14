@@ -14,10 +14,10 @@ export function PastTickets({ groups, selectedId, onSelect }: PastTicketsProps) 
 
   return (
     <details className="mt-14">
-      <summary className="cursor-pointer text-[11px] font-semibold tracking-[0.3em] text-pink-soft select-none hover:text-pink">
-        _past tickets ({count})
+      <summary className="w-fit cursor-pointer bg-ink px-4 py-1.5 text-[17px] font-extrabold text-white italic select-none [clip-path:polygon(0_0,100%_0,94%_100%,0_100%)] hover:bg-pink">
+        past tickets ({count})
       </summary>
-      <div className="mt-6">
+      <div className="mt-8">
         <TicketAgenda groups={groups} selectedId={selectedId} onSelect={onSelect} />
       </div>
     </details>

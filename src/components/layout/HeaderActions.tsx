@@ -11,16 +11,19 @@ interface HeaderActionsProps {
   add?: { label: string; onClick: () => void };
 }
 
-/** The search box and, where something can be added, the round "+" button shown on the right of the header. */
+/** The search field and the round "+" on one black plate cut on a slant, at the top right. */
 export function HeaderActions({ query, onQueryChange, searchLabel, placeholder, add }: HeaderActionsProps) {
   return (
-    <>
-      <SearchBar value={query} onChange={onQueryChange} label={searchLabel} placeholder={placeholder} />
+    <div className="relative flex w-full max-w-[460px] items-center justify-end gap-4 py-2 pr-2 pl-3">
+      <span aria-hidden className="absolute inset-0 -right-3 hidden bg-ink [clip-path:polygon(0_52%,14px_6%,100%_0,97%_100%,12px_90%)] lg:block" />
+      <div className="relative flex-1">
+        <SearchBar value={query} onChange={onQueryChange} label={searchLabel} placeholder={placeholder} />
+      </div>
       {add && (
-        <IconButton label={add.label} onClick={add.onClick} className="shadow-[0_2px_8px_rgb(226_67_127/0.25)]">
-          <PlusIcon className="size-4" />
+        <IconButton label={add.label} onClick={add.onClick} className="relative">
+          <PlusIcon className="size-[18px]" />
         </IconButton>
       )}
-    </>
+    </div>
   );
 }

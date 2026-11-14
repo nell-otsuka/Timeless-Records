@@ -18,14 +18,14 @@ export function FileField({ label, accept, file, onChange, error, hint, disabled
 
   return (
     <div className={cn('flex flex-col gap-1', className)}>
-      <label htmlFor={id} className="text-[10px] font-semibold tracking-[0.3em] text-pink-soft">
+      <label htmlFor={id} className="text-[13px] font-bold text-pink-deep italic">
         {label}
       </label>
       <label
         className={cn(
-          'group flex cursor-pointer items-center gap-4 border-b border-dashed pt-1 pb-2.5 transition-colors',
+          'group flex cursor-pointer items-center gap-4 border-b-2 border-dashed pt-1 pb-2.5 transition-colors',
           'has-[:focus-visible]:border-pink hover:border-pink',
-          error ? 'border-pink-deep' : 'border-pink-line',
+          error ? 'border-pink-deep' : 'border-ink/25',
           disabled && 'pointer-events-none opacity-60',
         )}
       >
@@ -38,18 +38,18 @@ export function FileField({ label, accept, file, onChange, error, hint, disabled
           className="sr-only"
           onChange={(event) => onChange(event.target.files?.[0] ?? null)}
         />
-        <span className="rounded-full px-3.5 py-1 text-[10px] font-bold tracking-[0.2em] text-pink ring-1 ring-pink transition-colors group-hover:bg-pink group-hover:text-white">
+        <span className="hex bg-ink px-4 py-1.5 text-[13px] font-bold whitespace-nowrap text-white italic transition-colors [--point:9px] group-hover:bg-pink">
           choose file
         </span>
-        <span className="truncate text-[12px] tracking-[0.1em] text-pink-soft">{file ? file.name : 'no file chosen'}</span>
+        <span className="truncate text-[14px] text-muted italic">{file ? file.name : 'no file chosen'}</span>
       </label>
       {error ? (
-        <p id={messageId} role="alert" className="text-[10px] font-semibold tracking-[0.14em] text-pink-deep">
+        <p id={messageId} role="alert" className="text-[13px] font-semibold text-pink-deep italic">
           {error}
         </p>
       ) : (
         hint && (
-          <p id={messageId} className="text-[10px] leading-relaxed tracking-[0.14em] text-muted">
+          <p id={messageId} className="text-[13px] leading-relaxed text-muted">
             {hint}
           </p>
         )

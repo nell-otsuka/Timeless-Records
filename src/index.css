@@ -1,26 +1,31 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-cream: #fcf5ea;
-  --color-card: #fdf6eb;
-  --color-pink: #ef5297;
-  --color-pink-deep: #e2437f;
-  --color-pink-soft: #f39cc0;
-  --color-pink-line: #f5dcd9;
-  --color-muted: #c7a3b1;
-  --color-mauve: #b07d92;
+  /* sampled from the reference poster */
+  --color-ink: #0a0608;
+  --color-cream: #f7ede5;
+  --color-card: #f9f0e9;
+  --color-pink: #ef3181;
+  --color-pink-deep: #c4206a;
+  --color-pink-soft: #f59ac1;
+  --color-pink-line: #f1d3db;
+  --color-muted: #807b7b;
+  --color-mauve: #5f5658;
   --color-wire: #cdbfc6;
 
   --font-sans: 'Montserrat', system-ui, sans-serif;
-  --font-display: 'Archivo', sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-display: 'Montserrat', system-ui, sans-serif;
+  /* the old monospace captions use the same face now */
+  --font-mono: 'Montserrat', system-ui, sans-serif;
+  /* poster lettering (the big titles) and hollow text: Montserrat's variable outlines show their overlaps under a stroke */
+  --font-poster: 'Archivo', system-ui, sans-serif;
 
   /* rem (not px) so Tailwind orders it after the built-in rem breakpoints */
   --breakpoint-3xl: 93.75rem;
 
-  --tracking-label: 0.26em;
-  --tracking-caps: 0.34em;
-  --tracking-brand: 0.36em;
+  --tracking-label: 0.01em;
+  --tracking-caps: 0.12em;
+  --tracking-brand: 0;
 
   /* Dialogs only fade in. Nothing in the app slides: panels swap instantly. */
   --animate-modal-in: modal-in 0.2s ease-out;
@@ -42,7 +47,7 @@
   }
   body {
     font-family: var(--font-sans);
-    color: var(--color-pink);
+    color: var(--color-ink);
     overflow-x: hidden;
   }
   button {
@@ -50,31 +55,49 @@
   }
 }
 
-/* Heavy, extra-wide display type used by headings. */
+/* The heavy display face: big titles, times and dates. */
 @utility font-wide {
   font-family: var(--font-display);
   font-weight: 900;
-  font-stretch: 125%;
-  font-variation-settings: 'wdth' 125;
+  font-style: italic;
 }
 
 @utility text-outline {
+  font-family: var(--font-poster);
   color: transparent;
-  -webkit-text-stroke: 2.2px var(--color-pink);
+  -webkit-text-stroke: 2px var(--color-pink);
 }
 
-/* The cream version of the outlined type, for text on pink. */
+/* White outlined lettering, for times set on pink. */
 @utility text-outline-cream {
+  font-family: var(--font-poster);
   color: transparent;
-  -webkit-text-stroke: 2px var(--color-cream);
+  -webkit-text-stroke: 2.5px #fff;
 }
 
-/* Slanted, cut corners like the poster layouts: top-left and bottom-right, or top-right and bottom-left. */
+/* Sticker lettering: the fill sits on top of a thick outline in the given colour. */
+@utility text-sticker {
+  -webkit-text-stroke: var(--sticker-width, 10px) var(--sticker-color, #fff);
+  paint-order: stroke fill;
+}
+
+/* Slanted, cut corners: top-left and bottom-right, or top-right and bottom-left. */
 @utility cut-tl-br {
   clip-path: polygon(var(--cut, 28px) 0, 100% 0, 100% calc(100% - var(--cut, 28px)), calc(100% - var(--cut, 28px)) 100%, 0 100%, 0 var(--cut, 28px));
 }
 @utility cut-tr-bl {
   clip-path: polygon(0 0, calc(100% - var(--cut, 28px)) 0, 100% var(--cut, 28px), 100% 100%, var(--cut, 28px) 100%, 0 calc(100% - var(--cut, 28px)));
+}
+
+/* A key with pointed ends, like the search field and the buttons of the poster. */
+@utility hex {
+  clip-path: polygon(var(--point, 12px) 0, calc(100% - var(--point, 12px)) 0, 100% 50%, calc(100% - var(--point, 12px)) 100%, var(--point, 12px) 100%, 0 50%);
+}
+
+/* Printed dots in the current text colour. */
+@utility halftone {
+  background-image: radial-gradient(circle, currentColor 1.4px, transparent 1.9px);
+  background-size: 7px 7px;
 }
 
 /* Fine diagonal hatching, set in the current text colour. */
@@ -84,7 +107,7 @@
 
 /* The same hatching, faint, as a background: marks a card that clashes. */
 @utility stripes-faint {
-  background-image: repeating-linear-gradient(135deg, rgb(239 82 151 / 0.11) 0 1.5px, transparent 1.5px 9px);
+  background-image: repeating-linear-gradient(135deg, rgb(239 49 129 / 0.14) 0 1.5px, transparent 1.5px 9px);
 }
 
 @utility scrollbar-none {

@@ -15,7 +15,7 @@ interface CoverPickerProps {
 }
 
 const PILL =
-  'rounded-full px-3.5 py-1.5 text-[10px] font-bold tracking-[0.2em] text-cream ring-1 ring-cream/80 transition-colors hover:bg-cream hover:text-pink';
+  'hex bg-ink px-4 py-1.5 text-[13px] font-bold whitespace-nowrap text-white italic transition-colors [--point:9px] hover:bg-white hover:text-pink';
 
 /** A poster with a way to change it: used on the pink side of the dialogs. */
 export function CoverPicker({ src, title, onChange, onClear, disabled }: CoverPickerProps) {
@@ -26,7 +26,7 @@ export function CoverPicker({ src, title, onChange, onClear, disabled }: CoverPi
     <div className="flex flex-col gap-3">
       <PosterFrame src={src} title={title}>
         {picker.uploading && (
-          <span role="status" className="absolute inset-0 grid place-items-center bg-pink/70 text-[10px] font-bold tracking-[0.22em] text-cream">
+          <span role="status" className="absolute inset-0 grid place-items-center bg-pink/70 text-[13px] font-bold text-white italic">
             uploading…
           </span>
         )}
@@ -55,7 +55,7 @@ export function CoverPicker({ src, title, onChange, onClear, disabled }: CoverPi
       </div>
 
       {picker.error && (
-        <p role="alert" className="max-w-[230px] text-[10px] font-semibold tracking-[0.14em] text-cream">
+        <p role="alert" className="max-w-[230px] text-[13px] font-semibold text-white italic">
           {picker.error}
         </p>
       )}

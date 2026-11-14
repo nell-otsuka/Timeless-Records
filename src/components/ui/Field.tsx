@@ -14,7 +14,7 @@ export function Field({ label, error, hint, className, ...props }: FieldProps) {
 
   return (
     <div className={cn('flex flex-col gap-1', className)}>
-      <label htmlFor={id} className="text-[10px] font-semibold tracking-[0.3em] text-pink-soft">
+      <label htmlFor={id} className="text-[13px] font-bold text-pink-deep italic">
         {label}
         {props.required && <span className="text-pink"> *</span>}
       </label>
@@ -23,22 +23,22 @@ export function Field({ label, error, hint, className, ...props }: FieldProps) {
         aria-invalid={Boolean(error)}
         aria-describedby={error || hint ? messageId : undefined}
         className={cn(
-          'h-9 border-b bg-transparent px-0 text-[14px] font-semibold tracking-[0.08em] text-pink-deep outline-none',
+          'h-10 border-b-2 bg-transparent px-0 text-[17px] font-semibold text-ink outline-none',
           'transition-[border-color,box-shadow] duration-200 disabled:opacity-60',
-          'placeholder:font-medium placeholder:text-pink-soft/60',
+          'placeholder:font-medium placeholder:text-ink/30',
           // the focus line thickens inside the box-shadow, so nothing shifts
           'focus:border-pink focus:shadow-[0_1px_0_0_var(--color-pink)]',
-          error ? 'border-pink-deep' : 'border-pink-line',
+          error ? 'border-pink-deep' : 'border-ink/25',
         )}
         {...props}
       />
       {error ? (
-        <p id={messageId} role="alert" className="text-[10px] font-semibold tracking-[0.14em] text-pink-deep">
+        <p id={messageId} role="alert" className="text-[13px] font-semibold text-pink-deep italic">
           {error}
         </p>
       ) : (
         hint && (
-          <p id={messageId} className="text-[10px] tracking-[0.14em] text-muted">
+          <p id={messageId} className="text-[13px] text-muted">
             {hint}
           </p>
         )

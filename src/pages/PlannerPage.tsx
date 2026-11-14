@@ -26,8 +26,8 @@ export function PlannerPage() {
         </EmptyState>
       ) : (
         <div className="max-w-[900px]">
-          <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
-            <p className="font-mono text-[11px] tracking-[0.14em] text-muted">
+          <div className="mt-4 mb-8 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-[16px] font-semibold text-muted italic">
               {summary.booked} booked · {summary.tentative} tentative · {summary.free} to choose from
             </p>
             <button
@@ -35,8 +35,8 @@ export function PlannerPage() {
               aria-pressed={hideClashes.value}
               onClick={hideClashes.toggle}
               className={cn(
-                'rounded-full px-4 py-1.5 text-[10px] font-bold tracking-[0.2em] ring-1 transition-colors',
-                hideClashes.value ? 'bg-pink text-white ring-pink' : 'text-pink ring-pink-soft hover:ring-pink',
+                'hex px-6 py-2 text-[15px] font-bold italic transition-colors [--point:12px]',
+                hideClashes.value ? 'bg-pink text-white' : 'bg-ink text-white hover:bg-pink-deep',
               )}
             >
               hide clashes
@@ -44,7 +44,7 @@ export function PlannerPage() {
           </div>
 
           {page.error && (
-            <p role="alert" className="mb-6 text-[11px] font-semibold tracking-[0.14em] text-pink-deep">
+            <p role="alert" className="mb-6 text-[13px] font-semibold text-pink-deep italic">
               {page.error}
             </p>
           )}

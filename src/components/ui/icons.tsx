@@ -108,3 +108,11 @@ export const EyeOffIcon = (props: IconProps) => (
     <path d="M2.5 13.5l11-11" />
   </svg>
 );
+
+/** Four looped corners, the "qr code" mark of the poster. */
+export const QrIcon = (props: IconProps) => (
+  <svg viewBox="0 0 16 16" strokeWidth={1.6} strokeLinejoin="round" {...base} {...props}>
+    <path d="M5.5 5.5V3.5a2 2 0 1 0-2 2h2zM10.5 5.5V3.5a2 2 0 1 1 2 2h-2zM5.5 10.5v2a2 2 0 1 1-2-2h2zM10.5 10.5v2a2 2 0 1 0 2-2h-2z" />
+    <rect x="5.5" y="5.5" width="5" height="5" />
+  </svg>
+);

@@ -1,27 +1,27 @@
 import type { ReactNode } from 'react';
-import { cn } from '@/lib/cn';
+import { SHARDS, Shard } from './Shard';
 
 /**
- * plain: a screening or ticket. filled: selected or held, solid pink. accent: chosen, full-strength pink outline.
- * deep: a darker pink outline, to tell a selected poster from the others.
- * hard / soft: a clash with something you hold (diagonal hatching) or something you are only considering (paler line).
+ * plain: a screening or ticket. filled: held or selected, solid pink. deep: a darker pink, for the selected one among
+ * pink ones. accent: a pink edge instead of black, to tell a selected poster from the others.
+ * hard / soft: a clash with something you hold (diagonal hatching) or something you are only considering (a grey edge).
  */
-export type PosterTone = 'plain' | 'filled' | 'accent' | 'deep' | 'hard' | 'soft';
+export type PosterTone = 'plain' | 'filled' | 'deep' | 'accent' | 'hard' | 'soft';
 
-const FRAME: Record<PosterTone, string> = {
-  plain: 'bg-pink-soft hover:bg-pink',
-  filled: 'bg-pink',
+const EDGE: Record<PosterTone, string> = {
+  plain: 'bg-ink',
+  filled: 'bg-ink',
+  deep: 'bg-ink',
   accent: 'bg-pink',
-  deep: 'bg-pink-deep',
-  hard: 'bg-pink-soft',
-  soft: 'bg-pink-line',
+  hard: 'bg-ink',
+  soft: 'bg-ink/40',
 };
 
-const INNER: Record<PosterTone, string> = {
+const FILL: Record<PosterTone, string> = {
   plain: 'bg-card',
-  filled: 'bg-pink text-cream',
+  filled: 'bg-pink text-white',
+  deep: 'bg-pink-deep text-white',
   accent: 'bg-card',
-  deep: 'bg-card',
   hard: 'stripes-faint bg-card',
   soft: 'bg-card',
 };
@@ -32,11 +32,11 @@ interface PosterCardProps {
   children: ReactNode;
 }
 
-/** The frame of a ticket, cut like the poster layouts: slanted top-left and bottom-right corners, a 2px line, no glow. */
+/** Every card of the app in the poster's ticket shape: a thin black edge with a heavy wedge down the right. */
 export function PosterCard({ tone, className, children }: PosterCardProps) {
   return (
-    <div className={cn('cut-tl-br [--cut:19px] p-[2px] transition-colors duration-200', FRAME[tone], className)}>
-      <div className={cn('cut-tl-br flex h-full flex-col [--cut:17px]', INNER[tone])}>{children}</div>
-    </div>
+    <Shard shape={SHARDS.ticket} edge={EDGE[tone]} fill={FILL[tone]} className={className} innerClassName="flex h-full flex-col">
+      {children}
+    </Shard>
   );
 }

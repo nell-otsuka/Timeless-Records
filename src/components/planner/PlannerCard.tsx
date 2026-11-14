@@ -1,9 +1,8 @@
 import { CoverImage } from '@/components/movies/CoverImage';
-import { PosterCard, type PosterTone } from '@/components/ui/PosterCard';
-import { TicketStub } from '@/components/tickets/TicketStub';
 import { Button } from '@/components/ui/Button';
 import { CheckIcon, CloseIcon, TrashIcon, WarningIcon } from '@/components/ui/icons';
 import { IconButton } from '@/components/ui/IconButton';
+import { PosterCard, type PosterTone } from '@/components/ui/PosterCard';
 import { cn } from '@/lib/cn';
 import type { PlannerEntry } from '@/lib/planner';
 
@@ -25,8 +24,9 @@ const toneOf = ({ state, clashes }: PlannerEntry): PosterTone => {
 };
 
 /**
- * One screening on the planner. Booked: solid pink. Tentative: pink outline, with a way to drop it or book it.
- * Free: plain, with a way to plan it, clash or not; hatched when it clashes with a ticket you hold, pale when only with one you are considering.
+ * One screening on the planner, in the same card as a ticket. Booked: solid pink. Tentative: a pink edge, with a way to
+ * drop it or book it. Free: plain, with a way to plan it; hatched when it clashes with a ticket you hold, a grey edge
+ * when only with one you are considering.
  */
 export function PlannerCard({ entry, busy, onPlan, onUnplan, onBook, onDelete }: PlannerCardProps) {
   const { state, title, coverUrl, span, cinemaName, clashes } = entry;
@@ -34,44 +34,31 @@ export function PlannerCard({ entry, busy, onPlan, onUnplan, onBook, onDelete }:
 
   return (
     <PosterCard tone={toneOf(entry)}>
-      <div className="flex min-h-[92px]">
-        <span className="w-[64px] shrink-0 overflow-hidden sm:w-[78px]">
-          <CoverImage src={coverUrl} title={title} className="size-full" initialsClassName="text-xl" />
+      <div className="flex min-h-[112px]">
+        <span className="w-[104px] shrink-0 self-stretch bg-ink py-[4px] pr-[7px] pl-[5px]">
+          <CoverImage src={coverUrl} title={title} className="size-full min-h-[104px]" initialsClassName="text-2xl" />
         </span>
-        <TicketStub onPink={booked} />
 
-        <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 px-4 py-3 sm:px-5">
-          <p className={cn('font-wide text-[22px] leading-none tracking-[-0.02em]', booked ? 'text-cream' : 'text-pink')}>{span}</p>
-          <p className={cn('flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-bold tracking-label', booked ? 'text-cream' : 'text-pink-deep')}>
+        <div className="flex min-w-0 flex-1 flex-col justify-center gap-[4px] py-3 pr-3 pl-[18px]">
+          <p className={cn('font-wide text-[27px] leading-none tracking-[-0.02em]', booked ? 'text-white' : 'text-pink')}>{span}</p>
+          <p className={cn('flex items-center gap-2 text-[19px] leading-tight font-semibold', booked ? 'text-white' : 'text-ink')}>
             <span className="truncate">{title}</span>
             {state !== 'free' && (
-              <span
-                className={cn(
-                  'rounded-full px-2 py-0.5 text-[9px] tracking-[0.18em] uppercase',
-                  booked ? 'bg-cream text-pink' : 'text-pink ring-1 ring-pink',
-                )}
-              >
+              <span className={cn('shrink-0 px-2 py-0.5 text-[11px] font-bold tracking-[0.08em] uppercase', booked ? 'bg-white text-pink' : 'bg-pink text-white')}>
                 {booked ? 'booked' : 'tentative'}
               </span>
             )}
           </p>
-          <p className={cn('truncate text-[10px] font-medium tracking-[0.22em]', booked ? 'text-cream/85' : 'text-pink-soft')}>{cinemaName}</p>
+          <p className={cn('truncate text-[16px] font-medium italic', booked ? 'text-white/85' : 'text-muted')}>{cinemaName}</p>
         </div>
 
-        <div className="flex shrink-0 items-center gap-2 pr-5">
+        <div className="flex shrink-0 items-center gap-3 pr-[50px]">
           {booked && (
             <>
-              <button
-                type="button"
-                aria-label="delete this ticket"
-                title="delete this ticket"
-                disabled={busy}
-                onClick={() => onDelete(entry)}
-                className="grid size-8 place-items-center rounded-full text-cream ring-1 ring-cream/70 transition-colors hover:bg-cream hover:text-pink disabled:opacity-60"
-              >
+              <IconButton label="delete this ticket" variant="outline" size="sm" disabled={busy} onClick={() => onDelete(entry)}>
                 <TrashIcon className="size-3.5" />
-              </button>
-              <span aria-label="booked" className="grid size-8 place-items-center rounded-full bg-cream text-pink">
+              </IconButton>
+              <span aria-label="booked" className="grid size-[34px] place-items-center rounded-full bg-white text-pink ring-2 ring-ink">
                 <CheckIcon className="size-3.5" />
               </span>
             </>
@@ -81,13 +68,13 @@ export function PlannerCard({ entry, busy, onPlan, onUnplan, onBook, onDelete }:
               <IconButton label="remove from my plan" variant="outline" size="sm" disabled={busy} onClick={() => onUnplan(entry)}>
                 <CloseIcon className="size-2.5" />
               </IconButton>
-              <Button disabled={busy} onClick={() => onBook(entry)} className="disabled:opacity-60">
+              <Button disabled={busy} onClick={() => onBook(entry)}>
                 book
               </Button>
             </>
           )}
           {state === 'free' && (
-            <Button variant="ghost" disabled={busy} onClick={() => onPlan(entry)} className="ring-1 ring-pink-soft disabled:opacity-60">
+            <Button variant="dark" disabled={busy} onClick={() => onPlan(entry)}>
               plan it
             </Button>
           )}
@@ -95,19 +82,13 @@ export function PlannerCard({ entry, busy, onPlan, onUnplan, onBook, onDelete }:
       </div>
 
       {clashes.length > 0 && (
-        <div className="flex flex-wrap items-center gap-1.5 border-t border-dashed border-pink-line px-4 py-2.5 sm:px-5">
-          <span className="flex items-center gap-1.5 text-[10px] font-semibold tracking-[0.18em] text-pink-deep">
-            <WarningIcon className="size-3" />
+        <div className="flex flex-wrap items-center gap-2 border-t-2 border-dashed border-ink/25 py-2.5 pr-[50px] pl-[18px]">
+          <span className="flex items-center gap-1.5 text-[14px] font-bold text-pink-deep italic">
+            <WarningIcon className="size-3.5" />
             clashes with
           </span>
           {clashes.map((clash) => (
-            <span
-              key={clash.title}
-              className={cn(
-                'rounded-[4px] px-2 py-0.5 text-[10px] font-semibold tracking-[0.12em]',
-                clash.hard ? 'bg-pink text-white' : 'bg-cream text-pink-deep ring-1 ring-pink',
-              )}
-            >
+            <span key={clash.title} className={cn('px-2 py-0.5 text-[13px] font-semibold', clash.hard ? 'bg-ink text-white' : 'bg-white text-ink ring-1 ring-ink')}>
               {clash.title}
             </span>
           ))}

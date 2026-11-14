@@ -99,7 +99,7 @@ export function TicketForm({ initial, editing, movies, cinemas, tickets, onSubmi
         )}
 
         {form.submitError && (
-          <p role="alert" className="col-span-full text-[10px] font-semibold tracking-[0.14em] text-pink-deep">
+          <p role="alert" className="col-span-full text-[13px] font-semibold text-pink-deep italic">
             {form.submitError}
           </p>
         )}

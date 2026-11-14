@@ -40,7 +40,7 @@ export function MovieTrackerPage() {
         <SyncBar sync={tracker.sync.label} onRefresh={tracker.sync.refresh} />
       </div>
 
-      <main className="flex flex-col items-start gap-6 lg:flex-row lg:gap-9">
+      <main className="flex flex-col items-start gap-6 lg:flex-row lg:gap-9 lg:[--panel-top:364px]">
         {tracker.status === 'error' ? (
           <EmptyState title="we couldn't load your movies" hint="check your connection, then try again.">
             <Button onClick={tracker.reload}>try again</Button>

@@ -12,9 +12,9 @@ export function CityPickerButton({ label, onClick }: CityPickerButtonProps) {
       type="button"
       onClick={onClick}
       aria-label={`cities: ${label}. change`}
-      className="flex items-center gap-2 rounded-full border border-pink-line bg-card px-3.5 py-1.5 text-[11px] font-semibold tracking-[0.18em] text-pink-deep transition-colors hover:border-pink-soft"
+      className="hex flex items-center gap-2 bg-ink py-2 pr-6 pl-5 text-[16px] font-bold text-white italic transition-colors [--point:12px] hover:bg-pink-deep"
     >
-      <PinIcon className="size-3.5 text-pink" />
+      <PinIcon className="size-4 text-pink-soft" />
       {label}
     </button>
   );

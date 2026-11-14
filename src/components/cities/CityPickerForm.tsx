@@ -47,7 +47,7 @@ export function CityPickerForm({ cities, selectedIds, onSave, onCancel }: CityPi
         </ul>
       )}
 
-      <p className="font-mono text-[11px] leading-[1.8] font-light tracking-[0.12em] text-mauve lowercase">
+      <p className="text-[14px] leading-relaxed text-muted italic">
         {picker.ids.length === 0
           ? 'none selected: every city is scraped (up to 30 per movie).'
           : `${picker.ids.length} selected. applies to all your movies.`}{' '}
@@ -55,7 +55,7 @@ export function CityPickerForm({ cities, selectedIds, onSave, onCancel }: CityPi
       </p>
 
       {picker.error && (
-        <p role="alert" className="text-[10px] font-semibold tracking-[0.14em] text-pink-deep">
+        <p role="alert" className="text-[13px] font-semibold text-pink-deep italic">
           {picker.error}
         </p>
       )}

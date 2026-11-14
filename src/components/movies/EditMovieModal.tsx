@@ -45,7 +45,7 @@ function EditMovieDialog({ movie, onSubmit, onClose }: { movie: Movie; onSubmit:
         <MovieFields draft={draft} errors={errors} disabled={submitting} autoFocus="title" onChange={setField} />
 
         {submitError && (
-          <p role="alert" className="col-span-full text-[10px] font-semibold tracking-[0.14em] text-pink-deep">
+          <p role="alert" className="col-span-full text-[13px] font-semibold text-pink-deep italic">
             {submitError}
           </p>
         )}

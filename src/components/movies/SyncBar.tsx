@@ -15,7 +15,7 @@ export function SyncBar({ sync, onRefresh }: SyncBarProps) {
       <p
         aria-live="polite"
         title={sync.issues.join('\n') || undefined}
-        className="truncate font-mono text-[11px] tracking-[0.14em] text-muted"
+        className="truncate text-[15px] font-semibold text-muted italic"
       >
         {sync.text}
       </p>

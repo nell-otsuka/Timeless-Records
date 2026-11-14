@@ -11,7 +11,7 @@ interface MovieCardProps {
   onSelect: (id: string) => void;
 }
 
-/** A movie of the watch list, in the same cut-corner frame as the tickets. Selected, the whole card turns pink. */
+/** A movie of the watch list, in the same hand-cut frame as the tickets. Selected, the whole card turns pink. */
 export function MovieCard({ movie, selected, onSelect }: MovieCardProps) {
   const count = movie.screenings.length;
   const available = count > 0;
@@ -23,17 +23,17 @@ export function MovieCard({ movie, selected, onSelect }: MovieCardProps) {
           <CoverImage src={movie.coverUrl} title={movie.title} className={cn('size-full', !available && 'opacity-75 grayscale-[0.55]')} />
         </div>
 
-        <div className="flex h-[57px] items-center justify-between gap-3 px-4">
+        <div className="flex h-[66px] items-center justify-between gap-3 pr-[46px] pl-4">
           <div className="min-w-0">
-            <p className={cn('truncate text-xs font-bold tracking-label', selected ? 'text-cream' : 'text-pink-deep')}>{movie.title}</p>
+            <p className={cn('truncate text-[15px] leading-tight font-semibold tracking-[-0.01em]', selected ? 'text-white' : 'text-ink')}>{movie.title}</p>
             <p
               className={cn(
-                'mt-0.5 flex items-center gap-1.5 text-[10px] tracking-[0.22em]',
-                selected ? 'font-semibold text-cream/85' : available ? 'font-semibold text-pink' : 'font-medium text-muted',
+                'mt-1 flex items-center gap-1.5 text-[12px] whitespace-nowrap italic',
+                selected ? 'font-semibold text-white/85' : available ? 'font-bold text-pink' : 'font-medium text-muted',
               )}
             >
               <span
-                className={cn('size-[5px] rounded-full', selected ? 'bg-cream' : available ? 'bg-pink' : 'bg-muted')}
+                className={cn('size-[6px] rounded-full', selected ? 'bg-white' : available ? 'bg-pink' : 'bg-muted')}
                 aria-hidden
               />
               {screeningCountLabel(count)}
@@ -41,12 +41,12 @@ export function MovieCard({ movie, selected, onSelect }: MovieCardProps) {
           </div>
           <span
             className={cn(
-              'grid size-[19px] shrink-0 place-items-center rounded-full',
-              selected ? 'bg-cream text-pink' : available ? 'bg-pink text-white' : 'bg-muted text-white',
+              'grid size-[24px] shrink-0 place-items-center rounded-full',
+              selected ? 'bg-white text-pink' : available ? 'bg-pink text-white' : 'bg-muted text-white',
             )}
             aria-hidden
           >
-            <ArrowIcon className="size-[9px]" />
+            <ArrowIcon className="size-[11px]" />
           </span>
         </div>
       </button>

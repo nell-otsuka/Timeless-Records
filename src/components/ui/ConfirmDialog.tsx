@@ -30,10 +30,10 @@ function ConfirmBody({ title, message, confirmLabel, aside, onConfirm, onClose }
 
   return (
     <DialogLayout title={title} note="this cannot be undone" aside={aside} onClose={onClose}>
-      <p className="my-auto py-6 font-mono text-[13px] leading-[1.9] font-light tracking-[0.14em] text-mauve lowercase">{message}</p>
+      <p className="my-auto py-6 text-[18px] leading-relaxed text-ink">{message}</p>
 
       {error && (
-        <p role="alert" className="mb-3 text-[10px] font-semibold tracking-[0.14em] text-pink-deep">
+        <p role="alert" className="mb-3 text-[13px] font-semibold text-pink-deep italic">
           {error}
         </p>
       )}
