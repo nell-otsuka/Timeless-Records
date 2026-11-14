@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Album Gallery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,900&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#fcf5ea;
+    --card:#fdf6eb;
+    --pink:#ef5297;
+    --pink-deep:#e2437f;
+    --pink-soft:#f39cc0;
+    --pink-line:#f5dcd9;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--cream);overflow-x:hidden}
+  body{font-family:"Montserrat",system-ui,sans-serif;color:var(--pink)}
+
+  /* Design canvas: built at 1672px (the reference width) and scaled to fit */
+  #scaler{width:100%;overflow:hidden}
+  .page{position:relative;width:1672px;height:1100px;background:var(--cream);transform-origin:0 0}
+
+  /* ---------- HERO ART (cropped from the reference) ---------- */
+  .hero-art{position:absolute;left:728px;top:0;width:944px;height:394px;display:block}
+
+  /* ---------- HEADER ---------- */
+  /* header content aligned to the card grid edges: 117px → 1578px */
+  .logo{position:absolute;left:111px;top:18px;width:82px;height:76px;display:block}
+  .brand{position:absolute;left:215px;top:41px;font-size:18px;font-weight:600;letter-spacing:.36em;color:var(--pink)}
+  /* line only starts after the brand text and fades in, then continues inside the hero art */
+  .header-line{position:absolute;left:440px;top:100px;width:290px;height:2px;
+    background:linear-gradient(90deg,rgba(226,67,127,0),rgba(226,67,127,.11) 22%,rgba(226,67,127,.14))}
+  .search{
+    position:absolute;left:1193px;top:28px;width:385px;height:45px;border-radius:23px;
+    background:#fdf7f2;
+    box-shadow:0 2px 8px rgba(226,67,127,.10),0 0 0 1px rgba(244,201,214,.55);
+    display:flex;align-items:center;padding:0 16px 0 25px;
+  }
+  .search input{flex:1;border:0;outline:0;background:transparent;
+    font:500 13px "Montserrat",sans-serif;letter-spacing:.24em;color:var(--pink)}
+  .search input::placeholder{color:#e9779f}
+  .search svg{width:28px;height:28px}
+
+  /* ---------- HERO TEXT ---------- */
+  .eyebrow{position:absolute;left:122px;top:155px;font-size:18px;font-weight:500;letter-spacing:.34em;color:var(--pink)}
+  .h-browse,.h-albums{
+    position:absolute;left:118px;font-family:"Archivo",sans-serif;font-weight:900;
+    font-stretch:125%;font-variation-settings:"wdth" 125;
+    font-size:96px;line-height:1;letter-spacing:-.025em;
+  }
+  .h-browse{top:174px;color:var(--pink)}
+  .h-albums{top:250px;color:transparent;-webkit-text-stroke:2.2px var(--pink)}
+  .chev{position:absolute;left:579px;top:296px;width:20px;height:22px}
+  .tagline{position:absolute;left:122px;top:346px;font-size:17px;font-weight:500;letter-spacing:.47em;color:var(--pink)}
+
+  /* ---------- CARDS (positions measured from the reference) ---------- */
+  .card{
+    position:absolute;height:302px;background:var(--card);border-radius:7px;overflow:hidden;
+    box-shadow:0 0 0 1px var(--pink-line),0 2px 6px rgba(226,67,127,.08);
+    display:flex;flex-direction:column;cursor:pointer;
+    transition:transform .25s ease,box-shadow .25s ease;
+  }
+  .card:hover{transform:translateY(-4px);box-shadow:0 0 0 1px var(--pink-soft),0 10px 22px rgba(226,67,127,.18)}
+  .cover{height:244px;margin:1px 1px 0;border-radius:6px 6px 0 0;overflow:hidden;flex:none}
+  .cover img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+  .meta{flex:1;display:flex;align-items:center;justify-content:space-between;padding:0 17px 0 17px}
+  .title{font-size:12px;font-weight:700;letter-spacing:.26em;color:var(--pink-deep);line-height:1.25}
+  .artist{font-size:10px;font-weight:500;letter-spacing:.26em;color:var(--pink-soft);line-height:1.3}
+  .add{width:19px;height:19px;border-radius:50%;background:var(--pink);border:0;cursor:pointer;
+    display:grid;place-items:center;flex:none;margin-top:4px}
+  .add svg{width:9px;height:9px}
+</style>
+</head>
+<body>
+<div id="scaler">
+<div class="page" id="page">
+
+  <img class="hero-art" src="assets/hero.png" alt="">
+  <div class="header-line"></div>
+
+  <img class="logo" src="assets/logo.png" alt="logo">
+  <div class="brand">album gallery</div>
+
+  <label class="search">
+    <input type="text" placeholder="search albums...">
+    <svg viewBox="0 0 28 28" fill="none" stroke="#ef5297" stroke-width="2.4" stroke-linecap="round">
+      <circle cx="12" cy="12" r="8.5"/><line x1="18.5" y1="18.5" x2="25" y2="25"/>
+    </svg>
+  </label>
+
+  <div class="eyebrow">_album gallery</div>
+  <div class="h-browse">browse</div>
+  <div class="h-albums">albums</div>
+  <svg class="chev" viewBox="0 0 20 22" fill="none" stroke="#ef5297" stroke-width="3" stroke-linecap="square"><polyline points="3,4 16,11 3,18"/></svg>
+  <div class="tagline">discover. listen. remember.</div>
+
+  <div id="cards"></div>
+</div>
+</div>
+
+<script>
+const albums = [
+  ["sky city","vaporwave"],["virtual dream","machine girl"],["starfall","au/re"],
+  ["afterglow","miyumi"],["nostalgia.exe","the girl who"],
+  ["pink static","untitled"],["neko.wav","8-bit club"],["wires","lofi kid"],
+  ["night bloom","hana"],["dusk line","sunset tapes"]
+];
+/* [left, width] per column and row tops, measured from the reference image */
+const cols = [[117,269],[420,275],[727,258],[1017,264],[1313,265]];
+const rows = [421,752];
+
+document.getElementById('cards').innerHTML = albums.map(([t,a],i)=>{
+  const [x,w]=cols[i%5], y=rows[Math.floor(i/5)];
+  return `
+  <article class="card" style="left:${x}px;top:${y}px;width:${w}px">
+    <div class="cover"><img src="assets/cover-${String(i+1).padStart(2,'0')}.png" alt="${t}"></div>
+    <div class="meta">
+      <div><div class="title">${t}</div><div class="artist">${a}</div></div>
+      <button class="add" aria-label="add ${t}"><svg viewBox="0 0 9 9" stroke="#fff" stroke-width="1.8"><path d="M4.5 0v9M0 4.5h9"/></svg></button>
+    </div>
+  </article>`}).join('');
+
+const page=document.getElementById('page'), scaler=document.getElementById('scaler');
+function fit(){
+  const s=window.innerWidth/1672;
+  page.style.transform=`scale(${s})`;
+  scaler.style.height=(page.offsetHeight*s)+'px';
+}
+addEventListener('resize',fit); fit();
+</script>
+</body>
+</html>

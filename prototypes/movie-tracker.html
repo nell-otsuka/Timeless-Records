@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Movie Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,900&family=Montserrat:wght@500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#fcf5ea;
+    --card:#fdf6eb;
+    --pink:#ef5297;
+    --pink-deep:#e2437f;
+    --pink-soft:#f39cc0;
+    --pink-line:#f5dcd9;
+    --muted:#c7a3b1;
+    --wire:#cdbfc6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--cream);overflow-x:hidden}
+  body{font-family:"Montserrat",system-ui,sans-serif;color:var(--pink)}
+  button{font:inherit;color:inherit}
+
+  /* Design canvas: built at 1672px and scaled to fit the window */
+  #scaler{width:100%;overflow:clip} /* clip (not hidden) so the sticky panel still sticks */
+  .page{position:relative;width:1672px;min-height:941px;background:var(--cream);transform-origin:0 0}
+
+  /* ---------- HERO ART ---------- */
+  .hero-art{position:absolute;left:728px;top:0;width:944px;height:394px;display:block}
+
+  /* ---------- HEADER (aligned to the content edges 117 → 1578) ---------- */
+  .logo{position:absolute;left:111px;top:18px;width:82px;height:76px;display:block}
+  .brand{position:absolute;left:215px;top:41px;font-size:18px;font-weight:600;letter-spacing:.36em;color:var(--pink)}
+  .header-line{position:absolute;left:440px;top:100px;width:290px;height:2px;
+    background:linear-gradient(90deg,rgba(226,67,127,0),rgba(226,67,127,.11) 22%,rgba(226,67,127,.14))}
+  .search{
+    position:absolute;left:1193px;top:28px;width:385px;height:45px;border-radius:23px;background:#fdf7f2;
+    box-shadow:0 2px 8px rgba(226,67,127,.10),0 0 0 1px rgba(244,201,214,.55);
+    display:flex;align-items:center;padding:0 16px 0 25px;z-index:2;
+  }
+  .search input{flex:1;border:0;outline:0;background:transparent;
+    font:500 13px "Montserrat",sans-serif;letter-spacing:.24em;color:var(--pink)}
+  .search input::placeholder{color:#e9779f}
+  .search svg{width:28px;height:28px}
+
+  /* ---------- HERO TEXT ---------- */
+  .eyebrow{position:absolute;left:122px;top:155px;font-size:18px;font-weight:500;letter-spacing:.34em;color:var(--pink)}
+  .h-big,.h-out{
+    position:absolute;left:118px;font-family:"Archivo",sans-serif;font-weight:900;
+    font-stretch:125%;font-variation-settings:"wdth" 125;font-size:96px;line-height:1;letter-spacing:-.025em;
+  }
+  .h-big{top:174px;color:var(--pink)}
+  .h-out{top:250px;color:transparent;-webkit-text-stroke:2.2px var(--pink)}
+  .chev{position:absolute;top:296px;width:20px;height:22px}
+  .tagline{position:absolute;left:122px;top:346px;font-size:17px;font-weight:500;letter-spacing:.47em;color:var(--pink)}
+
+  /* ---------- MAIN: grid + detail panel ---------- */
+  .main{position:absolute;left:117px;top:421px;width:1461px;display:flex;align-items:flex-start;padding-bottom:80px}
+  .grid{flex:1;min-width:0;display:grid;grid-template-columns:repeat(4,1fr);column-gap:33px;row-gap:32px}
+  .main.open .grid{column-gap:24px;row-gap:24px}
+
+  .card{
+    background:var(--card);border-radius:7px;overflow:hidden;cursor:pointer;
+    box-shadow:0 0 0 1px var(--pink-line),0 2px 6px rgba(226,67,127,.08);
+    display:flex;flex-direction:column;
+    transition:transform .25s ease,box-shadow .25s ease;
+  }
+  .card:hover{transform:translateY(-4px);box-shadow:0 0 0 1px var(--pink-soft),0 10px 22px rgba(226,67,127,.18)}
+  .card.active{box-shadow:0 0 0 2px var(--pink),0 10px 22px rgba(226,67,127,.22)}
+  .cover{aspect-ratio:265/244;margin:1px 1px 0;border-radius:6px 6px 0 0;overflow:hidden;position:relative}
+  .cover img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+  .card.none .cover img{filter:grayscale(.55) brightness(1.04);opacity:.75}
+  .meta{height:57px;display:flex;align-items:center;justify-content:space-between;padding:0 17px}
+  .title{font-size:12px;font-weight:700;letter-spacing:.26em;color:var(--pink-deep);line-height:1.25}
+  .count{font-size:10px;font-weight:600;letter-spacing:.22em;color:var(--pink);line-height:1.3;display:flex;align-items:center;gap:6px}
+  .count i{width:5px;height:5px;border-radius:50%;background:var(--pink);box-shadow:0 0 0 2px rgba(239,82,151,.18)}
+  .card.none .count{color:var(--muted);font-weight:500}
+  .card.none .count i{background:var(--muted);box-shadow:none}
+  .add{width:19px;height:19px;border-radius:50%;background:var(--pink);border:0;cursor:pointer;
+    display:grid;place-items:center;flex:none;margin-top:4px}
+  .card.none .add{background:var(--muted)}
+  .add svg{width:9px;height:9px}
+
+  /* ---------- DETAIL PANEL ---------- */
+  .panel{
+    position:sticky;top:20px;flex:none;width:0;margin-left:0;opacity:0;overflow:hidden;
+    transition:width .45s cubic-bezier(.2,.8,.2,1),margin .45s cubic-bezier(.2,.8,.2,1),opacity .3s ease;
+  }
+  .main.open .panel{width:500px;margin-left:36px;opacity:1}
+  .panel-inner{width:500px;position:relative;padding:4px 0 0}
+  .close{position:absolute;right:0;top:0;width:30px;height:30px;border-radius:50%;border:1px solid var(--pink-line);
+    background:#fdf7f2;cursor:pointer;display:grid;place-items:center;color:var(--pink)}
+  .close:hover{background:var(--pink);color:#fff}
+  .p-eyebrow{font-size:13px;font-weight:500;letter-spacing:.34em;color:var(--pink)}
+
+  .detail{display:flex;gap:22px;margin-top:22px;align-items:center}
+  .stage{width:290px;height:290px;flex:none;perspective:900px;display:grid;place-items:center}
+  .case{position:relative;width:236px;height:236px;transform-style:preserve-3d;
+    transform:rotateY(-22deg) rotateX(4deg) rotateZ(-1.5deg);transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+  .stage:hover .case{transform:rotateY(-10deg) rotateX(2deg)}
+  .case img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
+    box-shadow:0 18px 30px rgba(120,40,80,.18)}
+  .case .w{position:absolute;border:1px solid var(--wire);pointer-events:none}
+  .case .w1{inset:-10px -14px -10px -6px;transform:translateZ(-26px)}
+  .case .w2{inset:-4px;transform:translateZ(18px);border-color:#ddd0d6}
+  .case .w3{left:-6px;top:-10px;bottom:-10px;width:6px;border-right:0;transform:rotateY(90deg) translateZ(0);transform-origin:right}
+
+  .info{font-family:"JetBrains Mono",monospace;font-weight:300;font-size:12px;letter-spacing:.16em;
+    line-height:1.55;color:var(--muted);text-transform:lowercase}
+  .info dt{margin-top:14px}
+  .info dt:first-child{margin-top:0}
+  .info dd{color:#b07d92}
+
+  .p-title{margin-top:14px;font-family:"Archivo",sans-serif;font-weight:900;font-stretch:125%;
+    font-variation-settings:"wdth" 125;font-size:40px;line-height:1;letter-spacing:-.02em;color:var(--pink)}
+  .p-tag{margin-top:8px;font-size:11px;letter-spacing:.3em;color:var(--pink-soft)}
+
+  .sc-head{margin-top:26px;padding-bottom:10px;border-bottom:1px solid var(--pink-line);
+    display:flex;justify-content:space-between;align-items:baseline}
+  .sc-head h3{font-size:12px;font-weight:700;letter-spacing:.3em;color:var(--pink-deep)}
+  .sc-head span{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;color:var(--muted)}
+  .list{list-style:none;max-height:340px;overflow:auto;padding-right:6px;scrollbar-width:thin;scrollbar-color:var(--pink-soft) transparent}
+  .row{display:grid;grid-template-columns:62px 74px 1fr auto;align-items:center;gap:14px;
+    padding:13px 4px;border-bottom:1px dashed var(--pink-line)}
+  .day{text-align:center;line-height:1.1}
+  .day b{display:block;font-family:"Archivo",sans-serif;font-weight:900;font-stretch:125%;font-variation-settings:"wdth" 125;font-size:24px;color:var(--pink)}
+  .day small{font-size:9px;font-weight:600;letter-spacing:.24em;color:var(--pink-soft)}
+  .time{font-family:"JetBrains Mono",monospace;font-size:18px;font-weight:500;color:var(--pink-deep);letter-spacing:.04em}
+  .where{font-size:11px;font-weight:600;letter-spacing:.16em;color:var(--pink-deep);line-height:1.5}
+  .where small{display:block;font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.14em}
+  .tags{display:flex;gap:5px}
+  .tag{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.12em;padding:3px 7px;border-radius:10px;
+    border:1px solid var(--pink-soft);color:var(--pink)}
+  .tag.f{background:var(--pink);border-color:var(--pink);color:#fff}
+  .empty{padding:40px 10px;text-align:center;font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.16em;color:var(--muted);line-height:1.8}
+  .empty b{display:block;font-family:"Montserrat";font-size:13px;color:var(--pink-soft);letter-spacing:.3em;margin-bottom:6px}
+</style>
+</head>
+<body>
+<div id="scaler">
+<div class="page" id="page">
+
+  <img class="hero-art" src="assets/hero.png" alt="">
+  <div class="header-line"></div>
+
+  <img class="logo" src="assets/logo.png" alt="logo">
+  <div class="brand">movie tracker</div>
+
+  <label class="search">
+    <input id="q" type="text" placeholder="search movies...">
+    <svg viewBox="0 0 28 28" fill="none" stroke="#ef5297" stroke-width="2.4" stroke-linecap="round">
+      <circle cx="12" cy="12" r="8.5"/><line x1="18.5" y1="18.5" x2="25" y2="25"/>
+    </svg>
+  </label>
+
+  <div class="eyebrow">_movie tracker</div>
+  <div class="h-big">watch</div>
+  <div class="h-out" id="hOut">movies</div>
+  <svg class="chev" id="chev" viewBox="0 0 20 22" fill="none" stroke="#ef5297" stroke-width="3" stroke-linecap="square"><polyline points="3,4 16,11 3,18"/></svg>
+  <div class="tagline">track. book. watch.</div>
+
+  <div class="main" id="main">
+    <div class="grid" id="grid"></div>
+    <aside class="panel" id="panel" aria-live="polite"><div class="panel-inner" id="panelInner"></div></aside>
+  </div>
+</div>
+</div>
+
+<script>
+/* ---------- DATA ----------
+   Screenings are stored as day offsets from today so the prototype always shows upcoming dates.
+   Replace with real dates / an API later. */
+const CINEMAS = {
+  lum:  ["cine lumière","paris 5e"],
+  nova: ["studio nova","paris 11e"],
+  star: ["the starlight","paris 2e"],
+  kino: ["kino aurora","paris 19e"],
+};
+const movies = [
+  { t:"sky city",      dir:"r. amano",   run:"1h48", genre:"drama",        year:2026, s:[[1,"19:30","lum",["vost"],"salle 2"],[2,"21:15","nova",["vf"],"salle 1"],[5,"16:00","star",["imax","vost"],"salle imax"]] },
+  { t:"virtual dream", dir:"k. mori",    run:"2h04", genre:"sci-fi",       year:2026, s:[] },
+  { t:"starfall",      dir:"au/re",      run:"1h56", genre:"space opera",  year:2026, s:[[0,"20:45","star",["imax","vost"],"salle imax"],[1,"14:10","lum",["vost"],"salle 1"],[3,"18:00","kino",["4dx","vf"],"salle 4"],[3,"22:30","star",["vost"],"salle 3"],[6,"20:00","nova",["vost"],"salle 2"]] },
+  { t:"afterglow",     dir:"miyumi",     run:"1h37", genre:"romance",      year:2026, s:[] },
+  { t:"nostalgia.exe", dir:"t. g. who",  run:"1h42", genre:"thriller",     year:2026, s:[[4,"21:00","nova",["vost"],"salle 3"]] },
+  { t:"pink static",   dir:"s. hoshino", run:"1h29", genre:"animation",    year:2026, s:[[2,"13:30","kino",["vf"],"salle 2"],[2,"17:45","lum",["vost"],"salle 2"]] },
+  { t:"neko.wav",      dir:"8-bit club", run:"1h31", genre:"comedy",       year:2026, s:[[0,"18:20","kino",["vf"],"salle 1"],[1,"11:00","kino",["vf"],"salle 1"],[7,"15:40","nova",["vost"],"salle 1"]] },
+  { t:"wires",         dir:"lofi kid",   run:"2h11", genre:"mystery",      year:2026, s:[[9,"20:30","lum",["vost","70mm"],"salle 1"]] },
+  { t:"night bloom",   dir:"hana i.",    run:"1h53", genre:"fantasy",      year:2026, s:[[3,"19:00","star",["vost"],"salle 2"],[4,"21:40","star",["imax","vost"],"salle imax"]] },
+  { t:"dusk line",     dir:"s. tapes",   run:"1h45", genre:"drama",        year:2027, s:[] },
+];
+
+const DAYS=["sun","mon","tue","wed","thu","fri","sat"], MONTHS=["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+const today=new Date(); today.setHours(0,0,0,0);
+const dayOf=o=>{const d=new Date(today);d.setDate(d.getDate()+o);return d};
+const countLabel=n=>n===0?"no screenings":n===1?"1 screening":`${n} screenings`;
+
+/* ---------- RENDER GRID ---------- */
+const grid=document.getElementById('grid'), main=document.getElementById('main');
+let selected=null;
+
+function renderGrid(filter=""){
+  grid.innerHTML=movies.map((m,i)=>({m,i})).filter(({m})=>m.t.includes(filter.toLowerCase())).map(({m,i})=>`
+    <article class="card ${m.s.length?'':'none'} ${selected===i?'active':''}" data-i="${i}" tabindex="0">
+      <div class="cover"><img src="assets/cover-${String(i+1).padStart(2,'0')}.png" alt="${m.t}"></div>
+      <div class="meta">
+        <div><div class="title">${m.t}</div><div class="count"><i></i>${countLabel(m.s.length)}</div></div>
+        <span class="add" aria-hidden="true"><svg viewBox="0 0 9 9" fill="none" stroke="#fff" stroke-width="1.8"><path d="M3 1l3.5 3.5L3 8"/></svg></span>
+      </div>
+    </article>`).join('');
+  fit();
+}
+
+/* ---------- DETAIL PANEL ---------- */
+const panelInner=document.getElementById('panelInner');
+function openMovie(i){
+  selected=i; const m=movies[i];
+  const sc=[...m.s].sort((a,b)=>a[0]-b[0]||a[1].localeCompare(b[1]));
+  panelInner.innerHTML=`
+    <button class="close" id="close" aria-label="close"><svg width="10" height="10" viewBox="0 0 10 10" stroke="currentColor" stroke-width="1.6"><path d="M1 1l8 8M9 1l-8 8"/></svg></button>
+    <div class="p-eyebrow">_now viewing</div>
+    <div class="detail">
+      <div class="stage"><div class="case">
+        <div class="w w1"></div>
+        <img src="assets/cover-${String(i+1).padStart(2,'0')}.png" alt="${m.t}">
+        <div class="w w2"></div>
+      </div></div>
+      <dl class="info">
+        <dt>director:</dt><dd>${m.dir}.</dd>
+        <dt>movie info:</dt><dd>${m.run}.<br>${m.genre}.</dd>
+        <dt>release:</dt><dd>${m.year}.</dd>
+        <dt>screenings:</dt><dd>${m.s.length||'none'}.</dd>
+      </dl>
+    </div>
+    <div class="p-title">${m.t}</div>
+    <div class="p-tag">${m.genre} · ${m.run}</div>
+    <div class="sc-head"><h3>screenings</h3><span>${countLabel(m.s.length)}</span></div>
+    ${sc.length?`<ul class="list">${sc.map(([o,time,c,tags,room])=>{const d=dayOf(o);return `
+      <li class="row">
+        <div class="day"><small>${o===0?'today':o===1?'tmrw':DAYS[d.getDay()]}</small><b>${String(d.getDate()).padStart(2,'0')}</b><small>${MONTHS[d.getMonth()]}</small></div>
+        <div class="time">${time}</div>
+        <div class="where">${CINEMAS[c][0]}<small>${CINEMAS[c][1]} · ${room}</small></div>
+        <div class="tags">${tags.map(t=>`<span class="tag ${['imax','4dx','70mm'].includes(t)?'f':''}">${t}</span>`).join('')}</div>
+      </li>`}).join('')}</ul>`
+    :`<div class="empty"><b>nothing yet</b>no screenings scheduled for this movie.<br>check back soon.</div>`}
+  `;
+  main.classList.add('open');
+  document.querySelectorAll('.card').forEach(c=>c.classList.toggle('active',+c.dataset.i===i));
+  document.getElementById('close').onclick=closePanel;
+  fit();
+}
+function closePanel(){
+  selected=null; main.classList.remove('open');
+  document.querySelectorAll('.card.active').forEach(c=>c.classList.remove('active'));
+  fit();
+}
+
+grid.addEventListener('click',e=>{const c=e.target.closest('.card'); if(c) openMovie(+c.dataset.i)});
+grid.addEventListener('keydown',e=>{if(e.key==='Enter'){const c=e.target.closest('.card'); if(c) openMovie(+c.dataset.i)}});
+addEventListener('keydown',e=>{if(e.key==='Escape') closePanel()});
+document.getElementById('q').addEventListener('input',e=>renderGrid(e.target.value));
+
+/* position the ">" right after the outlined word */
+const hOut=document.getElementById('hOut'), chev=document.getElementById('chev');
+function placeChev(){chev.style.left=(118+hOut.offsetWidth+22)+'px'}
+
+/* ---------- SCALE 1672px canvas to window ---------- */
+const page=document.getElementById('page'), scaler=document.getElementById('scaler');
+function fit(){
+  const s=window.innerWidth/1672;
+  page.style.transform=`scale(${s})`;
+  page.style.height=Math.max(941, main.offsetTop+main.offsetHeight)+'px';
+  scaler.style.height=(page.offsetHeight*s)+'px';
+}
+addEventListener('resize',fit);
+new ResizeObserver(fit).observe(main);
+document.fonts.ready.then(()=>{placeChev();fit()});
+renderGrid(); placeChev();
+</script>
+</body>
+</html>

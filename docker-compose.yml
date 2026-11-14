@@ -1,0 +1,59 @@
+name: movie-tracker
+
+# Three services, one network:
+#   web  nginx: serves the web app, proxies /api            → http://localhost:8787
+#   api  Node: REST API, AlloCiné scraper, daily cron        (not reachable from outside)
+#   db   PostgreSQL: all the data, incl. ticket files        (not reachable from outside)
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: movietracker
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?copy .env.example to .env and choose a password}
+      POSTGRES_DB: movietracker
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U movietracker -d movietracker"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    networks: [backend]
+
+  api:
+    build:
+      context: .
+      target: api
+    image: movie-tracker-api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgres://movietracker:${POSTGRES_PASSWORD}@db:5432/movietracker
+      TZ: ${TZ:-Europe/Paris}
+      SCRAPE_CRON: ${SCRAPE_CRON:-0 4 * * *}
+      SCRAPE_TIMEZONE: ${SCRAPE_TIMEZONE:-Europe/Paris}
+      SCRAPE_DELAY_MS: ${SCRAPE_DELAY_MS:-1200}
+      ALLOCINE_FETCH_SHOWTIMES: ${ALLOCINE_FETCH_SHOWTIMES:-true}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [backend]
+
+  web:
+    build:
+      context: .
+      target: web
+    image: movie-tracker-web
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-8787}:8080"
+    depends_on:
+      api:
+        condition: service_healthy
+    networks: [backend]
+
+networks:
+  backend:
+
+volumes:
+  db-data:
